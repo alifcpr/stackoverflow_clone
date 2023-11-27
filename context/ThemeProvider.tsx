@@ -14,21 +14,25 @@ type ThemeProviderProps = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [mode, setMode] = useState<string>("light");
+  const [mode, setMode] = useState<string>("dark");
 
-  //   const handleChange = () => {
-  //     if (mode === "dark") {
-  //       setMode("light");
-  //       document.documentElement.classList.add("light");
-  //     } else {
-  //       setMode("dark");
-  //       document.documentElement.classList.add("dark");
-  //     }
-  //   };
+  const handleChange = () => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme : dark)").matches)
+    ) {
+      setMode("dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      setMode("light");
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   useEffect(() => {
-    document.documentElement.classList.add("dark");
-  });
+    handleChange();
+  }, [mode]);
 
   return (
     <ThemeContext.Provider value={{ mode, setMode }}>
