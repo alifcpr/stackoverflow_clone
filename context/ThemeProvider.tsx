@@ -16,18 +16,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [mode, setMode] = useState<string>("light");
 
-  const handleChange = () => {
-    if (mode === "dark") {
-      setMode("light");
-      document.documentElement.classList.add("light");
-    } else {
-      setMode("dark");
-      document.documentElement.classList.add("dark");
-    }
-  };
+  //   const handleChange = () => {
+  //     if (mode === "dark") {
+  //       setMode("light");
+  //       document.documentElement.classList.add("light");
+  //     } else {
+  //       setMode("dark");
+  //       document.documentElement.classList.add("dark");
+  //     }
+  //   };
 
   useEffect(() => {
-    handleChange();
+    document.documentElement.classList.add("dark");
   });
 
   return (

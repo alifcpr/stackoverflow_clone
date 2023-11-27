@@ -13,7 +13,7 @@ const inter = Inter({
 const spaceGroteskFont = spaceGrotesk({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
-  variable: "----font-spaceGrotesk",
+  variable: "--font-spaceGrotesk",
 });
 
 export const metadata: Metadata = {
