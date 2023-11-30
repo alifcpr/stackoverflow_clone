@@ -68,7 +68,7 @@
   .text-light400_light500 {
     @apply text-light-400 dark:text-light-500 !important;
   }
-  text-light400_light500 {
+  .text-light400_light500 {
     @apply text-light-400 dark:text-light-500 !important;
   }
   .light-border {
