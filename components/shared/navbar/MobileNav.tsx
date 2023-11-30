@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation";
 const NavContent = () => {
   const pathName = usePathname();
   return (
-    <section className="flex h-full flex-col gap-6 pt-16 font-inter">
+    <section className="flex h-full w-full flex-col gap-6 pt-16 font-inter">
       {sidebarLinks.map((item, index) => {
         const isActive = pathName === item.route;
         return (
@@ -49,7 +49,7 @@ const NavContent = () => {
 const MobileNav = () => {
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <Image
           src={"/assets/icons/hamburger.svg"}
           width={36}
@@ -74,7 +74,7 @@ const MobileNav = () => {
           </p>
         </Link>
         <div>
-          <SheetClose>
+          <SheetClose className="w-full">
             <NavContent />
           </SheetClose>
           <SignedOut>
