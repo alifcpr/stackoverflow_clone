@@ -10,6 +10,7 @@ const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-inter",
 });
+
 const spaceGroteskFont = spaceGrotesk({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
@@ -31,20 +32,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ClerkProvider
-        appearance={{
-          elements: {
-            formButtonPrimary: "primary-gradient",
-            footerActionLink: "primary-text-gradient hover:text-primary-500",
-          },
-        }}
-      >
-        <ThemeProvider>
-          <body className={`${inter.variable} ${spaceGroteskFont.variable}`}>
-            {children}
-          </body>
-        </ThemeProvider>
-      </ClerkProvider>
+      <body className={`${inter.variable} ${spaceGroteskFont.variable}`}>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary: "primary-gradient",
+              footerActionLink: "primary-text-gradient hover:text-primary-500",
+            },
+          }}
+        >
+          <ThemeProvider>{children}</ThemeProvider>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

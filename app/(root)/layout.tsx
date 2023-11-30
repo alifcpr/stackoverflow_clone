@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "@/components/shared/NavBar";
+import NavBar from "@/components/shared/navbar/NavBar";
 
 type LayoutProps = {
   children: React.ReactNode;
