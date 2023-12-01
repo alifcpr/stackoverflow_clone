@@ -6,9 +6,8 @@ import { Button } from "../ui/button";
 const HomeFilters = () => {
   const [active, setActive] = useState("");
 
-
   return (
-    <div className="mt-10  flex-wrap gap-3 font-inter md:flex">
+    <div className="mt-10  flex-wrap gap-3 font-inter max-md:hidden md:flex">
       {HomePageFilters.map((filter, index) => (
         <Button
           key={index}
