@@ -129,7 +129,10 @@ const Question = () => {
                     // @ts-ignore
                     editorRef.current = editor;
                   }}
-                  initialValue="<p>This is the initial content of the editor.</p>"
+                  initialValue={""}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
+                  onChange={(e) => form.setValue("explanation", e.target.value)}
                   init={{
                     height: 350,
                     menubar: false,
