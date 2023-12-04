@@ -5,58 +5,12 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filter";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 import React from "react";
 
-type Question = {
-  _id: number;
-  title: string;
-  tags: { _id: number; name: string }[];
-  author: { _id: number; name: string; picture: string };
-  upvotes: number;
-  views: number;
-  answers: Array<object>;
-  createdAt: Date;
-}[];
-
-const Home = () => {
-  const questions: Question = [
-    {
-      _id: 1,
-      title:
-        "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
-      tags: [
-        { _id: 1, name: "Next.js" },
-        { _id: 2, name: "React" },
-      ],
-      author: {
-        _id: 1,
-        name: "Jhon Doe",
-        picture: "test.png",
-      },
-      upvotes: 10,
-      views: 500000,
-      answers: [],
-      createdAt: new Date("2021-09-01T12:00:00.000Z"),
-    },
-    {
-      _id: 2,
-      title: "How To Center A Div",
-      tags: [
-        { _id: 1, name: "HTML" },
-        { _id: 2, name: "CSS" },
-      ],
-      author: {
-        _id: 1,
-        name: "Jhon Doe",
-        picture: "test.png",
-      },
-      upvotes: 1,
-      views: 120,
-      answers: [],
-      createdAt: new Date("2021-09-01T12:00:00.000Z"),
-    },
-  ];
+const Home = async () => {
+  const questions = await getQuestions({});
 
   return (
     <>
@@ -85,8 +39,8 @@ const Home = () => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {questions!.length > 0 ? (
+          questions!.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}

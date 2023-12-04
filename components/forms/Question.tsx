@@ -19,7 +19,7 @@ import { QuestionShema } from "@/lib/validatoins";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type QuestionProps = {
   userId: string;
@@ -30,6 +30,7 @@ const Question = ({ userId }: QuestionProps) => {
 
   const editorRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof QuestionShema>>({
     resolver: zodResolver(QuestionShema),
@@ -49,6 +50,7 @@ const Question = ({ userId }: QuestionProps) => {
         content: values.explanation,
         tags: values.tags,
         author: userId,
+        path: pathname,
       });
       router.push("/");
     } catch (error) {
