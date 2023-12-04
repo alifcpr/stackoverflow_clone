@@ -18,11 +18,18 @@ import { Input } from "@/components/ui/input";
 import { QuestionShema } from "@/lib/validatoins";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
+import { useRouter } from "next/navigation";
 
-const Question = () => {
+type QuestionProps = {
+  userId: string;
+};
+
+const Question = ({ userId }: QuestionProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const editorRef = useRef(null);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof QuestionShema>>({
     resolver: zodResolver(QuestionShema),
@@ -33,11 +40,17 @@ const Question = () => {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof QuestionShema>) => {
+  const handleSubmit = async (values: z.infer<typeof QuestionShema>) => {
     setIsSubmitting(true);
-    console.log(values);
     try {
       // make an async all to your API
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: userId,
+      });
+      router.push("/");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -132,7 +145,6 @@ const Question = () => {
                   initialValue={""}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  onChange={(e) => form.setValue("explanation", e.target.value)}
                   init={{
                     height: 350,
                     menubar: false,
@@ -222,7 +234,7 @@ const Question = () => {
           )}
         />
         <Button
-          className="primary-gradient w-full !text-light-900"
+          className="primary-gradient w-full !text-light-900 disabled:opacity-60"
           disabled={isSubmitting}
           type="submit"
         >
