@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
-  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+  const WEBHOOK_SECRET = process.env.NEXT_CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
@@ -58,7 +58,16 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    const user = await createUser({
+    console.log(`
+        clerkId : ${id} ||
+        email_addresses : ${email_addresses} ||
+        image_url : ${image_url} ||
+        username : ${username} ||
+        first_name : ${first_name} ||
+        last_name : ${last_name} ||
+    `);
+
+    const createdUser = await createUser({
       clerkId: id,
       name: `${first_name}${last_name ? `${last_name}` : ""}`,
       username: username!,
@@ -66,14 +75,14 @@ export async function POST(req: Request) {
       picture: image_url,
     });
 
-    return NextResponse.json({ message: "Ok", user });
+    return NextResponse.json({ message: "Ok", user: createdUser });
   }
 
   if (eventType === "user.updated") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    const user = await updateUser({
+    const updatedUser = await updateUser({
       clerkId: id,
       updateData: {
         name: `${first_name}${last_name ? `${last_name}` : ""}`,
@@ -84,7 +93,7 @@ export async function POST(req: Request) {
       path: `/profile/${id}`,
     });
 
-    return NextResponse.json({ message: "Ok", user });
+    return NextResponse.json({ message: "Ok", user: updatedUser });
   }
 
   if (eventType === "user.deleted") {

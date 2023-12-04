@@ -24,10 +24,12 @@ const getUserById = async (params: any) => {
 const createUser = async (userData: CreateUserParams) => {
   try {
     await connectToDatabase();
+    console.log("creatUser Run");
+    console.log("userData All Info : ", userData);
     const newUser = await User.create(userData);
     return newUser;
   } catch (err) {
-    console.log(err);
+    console.log("error from createUser", err);
     throw err;
   }
 };
@@ -37,7 +39,7 @@ const updateUser = async (params: UpdateUserParams) => {
     await connectToDatabase();
 
     const { clerkId, updateData, path } = params;
-
+    console.log("updateUser Run");
     const newUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
@@ -45,7 +47,7 @@ const updateUser = async (params: UpdateUserParams) => {
     revalidatePath(path);
     return newUser;
   } catch (err) {
-    console.log(err);
+    console.log("error from updateUser : ", err);
     throw err;
   }
 };
@@ -55,13 +57,13 @@ const deleteUser = async (params: DeleteUserParams) => {
     await connectToDatabase();
 
     const { clerkId } = params;
+    console.log("deleteUser Run");
     const user = await User.findOne({ clerkId });
 
     if (!user) {
       throw new Error("User Not Found");
     }
 
-    
     // const userQuestions = await Question.find({ author: user._id }).distinct(
     //   "_id"
     // );
@@ -72,7 +74,7 @@ const deleteUser = async (params: DeleteUserParams) => {
 
     return deletedUser;
   } catch (err) {
-    console.log(err);
+    console.log("error from deleteUser : ", err);
     throw err;
   }
 };
