@@ -4,10 +4,14 @@ import Question from "@/database/models/question.model";
 import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/models/tag.model";
 import User from "@/database/models/user.model";
-import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
+import {
+  CreateQuestionParams,
+  GetQuestionByIdParams,
+  GetQuestionsParams,
+} from "./shared.types";
 import { revalidatePath } from "next/cache";
 
-export const getQuestions = async (params: GetQuestionsParams) => {
+const getQuestions = async (params: GetQuestionsParams) => {
   try {
     await connectToDatabase();
     const questions = await Question.find({})
@@ -22,7 +26,7 @@ export const getQuestions = async (params: GetQuestionsParams) => {
   } catch (err) {}
 };
 
-export const createQuestion = async (params: CreateQuestionParams) => {
+const createQuestion = async (params: CreateQuestionParams) => {
   try {
     await connectToDatabase();
     const { title, content, tags, author, path } = params;
@@ -46,3 +50,30 @@ export const createQuestion = async (params: CreateQuestionParams) => {
     revalidatePath(path);
   } catch (error) {}
 };
+
+const getQuestionById = async (params: GetQuestionByIdParams) => {
+  try {
+    await connectToDatabase();
+
+    const { questionId } = params;
+
+    const question = await Question.findById(questionId)
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    return question;
+  } catch (err) {
+    console.log("error from getQuestionById : ", getQuestionById);
+    throw err;
+  }
+};
+
+export { createQuestion, getQuestions, getQuestionById };

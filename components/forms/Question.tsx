@@ -20,6 +20,7 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 type QuestionProps = {
   userId: string;
@@ -31,6 +32,7 @@ const Question = ({ userId }: QuestionProps) => {
   const editorRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+  const { mode } = useTheme();
 
   const form = useForm<z.infer<typeof QuestionShema>>({
     resolver: zodResolver(QuestionShema),
@@ -179,6 +181,8 @@ const Question = ({ userId }: QuestionProps) => {
                       "removeformat | help",
                     content_style:
                       "body { font-family:Inter; font-size:16px; }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
