@@ -1,9 +1,12 @@
 import Answer from "@/components/forms/Answer";
+import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
 import { getQuestionById } from "@/lib/actions/question.action";
+import getUserById from "@/lib/actions/user.action";
 import { formatAndDividerNumber, getTimestamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -14,6 +17,12 @@ type QuestionDetailProps = {
 
 const QuestionDetail = async ({ params: { id } }: QuestionDetailProps) => {
   const result = await getQuestionById({ questionId: id });
+  const { userId: clerkId } = auth();
+
+  let mongoUser;
+  if (clerkId) {
+    mongoUser = await getUserById({ userId: clerkId });
+  }
 
   return (
     <>
@@ -70,7 +79,18 @@ const QuestionDetail = async ({ params: { id } }: QuestionDetailProps) => {
           <RenderTag _id={tag._id} key={tag._id} name={tag.name} />
         ))}
       </div>
-      <Answer />
+
+      <AllAnswers
+        questionId={JSON.stringify(result._id)}
+        userId={JSON.stringify(mongoUser._id)}
+        totalAnswers={result.answers.length}
+      />
+
+      <Answer
+        question={result.content}
+        questionId={JSON.stringify(result._id)}
+        authorId={JSON.stringify(mongoUser._id)}
+      />
     </>
   );
 };

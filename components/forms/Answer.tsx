@@ -16,10 +16,19 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-const Answer = () => {
+type AnswerProps = {
+  question: string;
+  questionId: string;
+  authorId: string;
+};
+
+const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mode } = useTheme();
+  const pathName = usePathname();
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -28,14 +37,26 @@ const Answer = () => {
     },
   });
 
-  //   const editorRef = useRef(null);
   const editorRef = useRef(null);
 
-  const handlerCreateAnswer = (data: any) => {
+  const handlerCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     setIsSubmitting(true);
     try {
-      // api
+      await createAnswer({
+        author: JSON.parse(authorId),
+        content: values.answer,
+        question: JSON.parse(questionId),
+        path: pathName,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
     } catch (err) {
+      console.log("error from handlerCreateAnswer", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -126,7 +147,7 @@ const Answer = () => {
           <div className="flex justify-end">
             <Button
               disabled={isSubmitting}
-              type="button"
+              type="submit"
               className="primary-gradient w-fit text-white"
             >
               {isSubmitting ? "Submitting..." : "Submit"}
