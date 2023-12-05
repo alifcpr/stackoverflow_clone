@@ -8,6 +8,7 @@ import {
   CreateQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
+  QuestionVoteParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 
@@ -76,4 +77,80 @@ const getQuestionById = async (params: GetQuestionByIdParams) => {
   }
 };
 
-export { createQuestion, getQuestions, getQuestionById };
+const upVoteQuestion = async (params: QuestionVoteParams) => {
+  try {
+    await connectToDatabase();
+
+    const { questionId, userId, hasDownVoted, hasUpVoted, path } = params;
+
+    let updateQuery = {};
+
+    // upVote
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasDownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from upVoteQuestion : ", err);
+    throw err;
+  }
+};
+
+const downVoteQuestion = async (params: QuestionVoteParams) => {
+  try {
+    await connectToDatabase();
+
+    const { questionId, userId, hasDownVoted, hasUpVoted, path } = params;
+
+    let updateQuery = {};
+
+    // downVote
+    if (hasDownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasUpVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $push: { downvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from upVoteQuestion : ", err);
+    throw err;
+  }
+};
+
+export {
+  createQuestion,
+  getQuestions,
+  getQuestionById,
+  upVoteQuestion,
+  downVoteQuestion,
+};

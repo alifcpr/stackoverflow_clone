@@ -9,7 +9,7 @@ import { getTimestamp } from "@/lib/utils";
 
 type AllAnswersProps = {
   questionId: string;
-  userId: string;
+  userId?: string;
   totalAnswers: number;
   page?: number;
   filter?: number;

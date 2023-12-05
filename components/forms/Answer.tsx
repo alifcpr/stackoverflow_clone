@@ -22,7 +22,7 @@ import { usePathname } from "next/navigation";
 type AnswerProps = {
   question: string;
   questionId: string;
-  authorId: string;
+  authorId: string | null;
 };
 
 const Answer = ({ question, questionId, authorId }: AnswerProps) => {
@@ -40,6 +40,9 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const editorRef = useRef(null);
 
   const handlerCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
+    if (!authorId) {
+      return ;
+    }
     setIsSubmitting(true);
     try {
       await createAnswer({
