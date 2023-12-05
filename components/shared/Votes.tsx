@@ -53,7 +53,7 @@ const Votes = ({
           hasDownVoted: hasDownVoted!,
           hasUpVoted: hasUpVoted!,
           path: pathName,
-          answerId: itemId,
+          answerId: JSON.parse(itemId),
         });
       }
       return;
@@ -73,7 +73,7 @@ const Votes = ({
           hasDownVoted: hasDownVoted!,
           hasUpVoted: hasUpVoted!,
           path: pathName,
-          answerId: itemId,
+          answerId: JSON.parse(itemId),
         });
       }
     }

@@ -59,7 +59,7 @@ const AllAnswers = async ({
                 </Link>
                 <Votes
                   type="Answer"
-                  itemId={answer._id}
+                  itemId={JSON.stringify(answer._id)}
                   userId={JSON.parse(userId)}
                   upVotes={answer.upvotes.length}
                   hasUpVoted={answer.upvotes.includes(JSON.parse(userId))}
