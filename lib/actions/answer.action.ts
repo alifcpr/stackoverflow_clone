@@ -2,7 +2,11 @@
 
 import Answer from "@/database/models/answer.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  GetAnswersParams,
+} from "./shared.types";
 import Question from "@/database/models/question.model";
 import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
@@ -49,4 +53,74 @@ const getAnswers = async (params: GetAnswersParams) => {
   }
 };
 
-export { createAnswer, getAnswers };
+const upVoteAnswer = async (params: AnswerVoteParams) => {
+  try {
+    await connectToDatabase();
+
+    const { answerId, userId, hasDownVoted, hasUpVoted, path } = params;
+
+    let updateQuery = {};
+
+    // upVote
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasDownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from upVoteAnswer : ", err);
+    throw err;
+  }
+};
+
+const downVoteAnswer = async (params: AnswerVoteParams) => {
+  try {
+    await connectToDatabase();
+
+    const { answerId, userId, hasDownVoted, hasUpVoted, path } = params;
+
+    let updateQuery = {};
+
+    // downVote
+    if (hasDownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasUpVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $push: { downvotes: userId } };
+    }
+
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from downVoteAnswer : ", err);
+    throw err;
+  }
+};
+
+export { createAnswer, getAnswers, upVoteAnswer, downVoteAnswer };

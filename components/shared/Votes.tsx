@@ -1,4 +1,5 @@
 "use client";
+import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 import {
   downVoteQuestion,
   upVoteQuestion,
@@ -47,13 +48,13 @@ const Votes = ({
           questionId: JSON.parse(itemId),
         });
       } else if (type === "Answer") {
-        // await upVoteQuestion({
-        //   userId: JSON.parse(userId),
-        //   hasDownVoted,
-        //   hasUpVoted,
-        //   path: pathName,
-        //   questionId: JSON.parse(itemId),
-        // });
+        await upVoteAnswer({
+          userId,
+          hasDownVoted: hasDownVoted!,
+          hasUpVoted: hasUpVoted!,
+          path: pathName,
+          answerId: itemId,
+        });
       }
       return;
     }
@@ -67,13 +68,13 @@ const Votes = ({
           questionId: JSON.parse(itemId),
         });
       } else if (type === "Answer") {
-        // await downVoteQuestion({
-        //   userId: JSON.parse(userId),
-        //   hasDownVoted,
-        //   hasUpVoted,
-        //   path: pathName,
-        //   questionId: JSON.parse(itemId),
-        // });
+        await downVoteAnswer({
+          userId,
+          hasDownVoted: hasDownVoted!,
+          hasUpVoted: hasUpVoted!,
+          path: pathName,
+          answerId: itemId,
+        });
       }
     }
   };
@@ -121,14 +122,16 @@ const Votes = ({
           </div>
         </div>
       </div>
-      <Image
-        src={"/assets/icons/star-red.svg"}
-        width={18}
-        height={18}
-        className="cursor-pointer "
-        alt={hasDownVoted ? "Down Voted" : "Down Vote"}
-        onClick={handleSave}
-      />
+      {type === "Question" && (
+        <Image
+          src={"/assets/icons/star-red.svg"}
+          width={18}
+          height={18}
+          className="cursor-pointer "
+          alt={hasDownVoted ? "Down Voted" : "Down Vote"}
+          onClick={handleSave}
+        />
+      )}
     </div>
   );
 };

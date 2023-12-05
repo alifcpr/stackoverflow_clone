@@ -6,10 +6,11 @@ import ParseHTML from "./ParseHTML";
 import Link from "next/link";
 import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";
+import Votes from "./Votes";
 
 type AllAnswersProps = {
   questionId: string;
-  userId?: string;
+  userId: string;
   totalAnswers: number;
   page?: number;
   filter?: number;
@@ -56,8 +57,16 @@ const AllAnswers = async ({
                     </p>
                   </div>
                 </Link>
+                <Votes
+                  type="Answer"
+                  itemId={answer._id}
+                  userId={JSON.parse(userId)}
+                  upVotes={answer.upvotes.length}
+                  hasUpVoted={answer.upvotes.includes(JSON.parse(userId))}
+                  downVotes={answer.downvotes.length}
+                  hasDownVoted={answer.downvotes.includes(JSON.parse(userId))}
+                />
               </div>
-              <div>VOTING</div>
             </div>
             <ParseHTML data={answer.content} />
           </article>

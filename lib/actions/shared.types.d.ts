@@ -33,8 +33,8 @@ export interface GetAnswersParams {
 export interface AnswerVoteParams {
   answerId: string;
   userId: string;
-  hasupVoted: boolean;
-  hasdownVoted: boolean;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
   path: string;
 }
 
