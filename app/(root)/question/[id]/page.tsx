@@ -48,7 +48,7 @@ const QuestionDetail = async ({ params: { id } }: QuestionDetailProps) => {
             <Votes
               type="Question"
               itemId={JSON.stringify(result._id)}
-              userId={JSON.stringify(mongoUser._id)}
+              userId={JSON.parse(JSON.stringify(mongoUser._id))}
               upVotes={result.upvotes.length}
               hasUpVoted={result.upvotes.includes(mongoUser._id)}
               downVotes={result.downvotes.length}

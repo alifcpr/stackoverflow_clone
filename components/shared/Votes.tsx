@@ -1,5 +1,6 @@
 "use client";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
+import { viewQuestion } from "@/lib/actions/intercation.action";
 import {
   downVoteQuestion,
   upVoteQuestion,
@@ -7,8 +8,9 @@ import {
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatAndDividerNumber } from "@/lib/utils";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+import React, { useEffect } from "react";
 
 type VotesProps = {
   type: string;
@@ -32,13 +34,14 @@ const Votes = ({
   hasSaved,
 }: VotesProps) => {
   const pathName = usePathname();
+  const router = useRouter();
   const handleSave = async () => {
     if (!userId) {
       return;
     }
 
     await toggleSaveQuestion({
-      userId: JSON.parse(userId),
+      userId,
       questionId: JSON.parse(itemId),
       path: pathName,
     });
@@ -52,7 +55,7 @@ const Votes = ({
     if (action === "upVote") {
       if (type === "Question") {
         await upVoteQuestion({
-          userId: JSON.parse(userId),
+          userId,
           hasDownVoted: hasDownVoted!,
           hasUpVoted: hasUpVoted!,
           path: pathName,
@@ -72,7 +75,7 @@ const Votes = ({
     if (action === "downVote") {
       if (type === "Question") {
         await downVoteQuestion({
-          userId: JSON.parse(userId),
+          userId,
           hasDownVoted: hasDownVoted!,
           hasUpVoted: hasUpVoted!,
           path: pathName,
@@ -89,6 +92,14 @@ const Votes = ({
       }
     }
   };
+
+  useEffect(() => {
+    viewQuestion({
+      questionId: JSON.parse(itemId),
+      userId: userId || undefined,
+    });
+    console.log(userId);
+  }, [itemId, userId, pathName, router]);
 
   return (
     <div className="flex gap-5">
