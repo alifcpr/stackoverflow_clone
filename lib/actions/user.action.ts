@@ -7,10 +7,13 @@ import {
   CreateUserParams,
   DeleteUserParams,
   GetAllUsersParams,
+  GetSavedQuestionsParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
 import Question from "@/database/models/question.model";
+import Tag from "@/database/models/tag.model";
+import { FilterQuery } from "mongoose";
 
 const getUserById = async (params: any) => {
   try {
@@ -127,5 +130,46 @@ const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
   }
 };
 
-export { createUser, updateUser, deleteUser, getAllUsers, toggleSaveQuestion };
+const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
+  try {
+    await connectToDatabase();
+
+    const { clerkId, searchQuery } = params;
+
+    const query: FilterQuery<typeof Question> = searchQuery
+      ? { title: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
+
+    const user = await User.findOne({ clerkId }).populate({
+      path: "saved",
+      match: query,
+      options: {
+        sort: { createdAt: -1 },
+      },
+      populate: [
+        { path: "tags", model: Tag, select: "_id name" },
+        { path: "author", model: User, select: "_id clerkId name picture" },
+      ],
+    });
+    if (!user) {
+      throw new Error("User Not Found");
+    }
+
+    const savedQuestion = user.saved;
+
+    return { savedQuestion };
+  } catch (err) {
+    console.log("error from getSavedQuestions : ", err);
+    throw err;
+  }
+};
+
+export {
+  createUser,
+  updateUser,
+  deleteUser,
+  getAllUsers,
+  getSavedQuestions,
+  toggleSaveQuestion,
+};
 export default getUserById;

@@ -12,7 +12,7 @@ type QuestionCardProps = {
   views: number;
   answers: Array<object>;
   createdAt: Date;
-  upVote: number;
+  upVote: string[];
 };
 
 const QuestionCard = ({
@@ -56,7 +56,7 @@ const QuestionCard = ({
           <Metric
             imgUrl="/assets/icons/like.svg"
             alt="Upvotes"
-            value={formatAndDividerNumber(upVote)}
+            value={formatAndDividerNumber(upVote.length)}
             title="Votes"
             textStyle="small-medium text-dark400_light800"
           />
