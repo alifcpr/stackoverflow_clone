@@ -7,6 +7,7 @@ import {
   CreateUserParams,
   DeleteUserParams,
   GetAllUsersParams,
+  ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
 import Question from "@/database/models/question.model";
@@ -91,5 +92,40 @@ const getAllUsers = async (params: GetAllUsersParams) => {
   }
 };
 
-export { createUser, updateUser, deleteUser, getAllUsers };
+const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
+  try {
+    await connectToDatabase();
+
+    const { userId, questionId, path } = params;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User Not Found");
+    }
+
+    const isSavedQuestion = await user.saved.includes(questionId);
+
+    if (isSavedQuestion) {
+      await User.findByIdAndUpdate(
+        userId,
+        { $pull: { saved: questionId } },
+        { new: true }
+      );
+    } else {
+      await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { saved: questionId } },
+        { new: true }
+      );
+    }
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from toggleSaveQuestion : ", err);
+    throw err;
+  }
+};
+
+export { createUser, updateUser, deleteUser, getAllUsers, toggleSaveQuestion };
 export default getUserById;
