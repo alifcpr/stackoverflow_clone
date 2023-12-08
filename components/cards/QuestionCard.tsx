@@ -13,9 +13,11 @@ type QuestionCardProps = {
   answers: Array<object>;
   createdAt: Date;
   upVote: string[];
+  clerkId?: string | null;
 };
 
 const QuestionCard = ({
+  clerkId,
   _id,
   title,
   tags,

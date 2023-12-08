@@ -8,12 +8,15 @@ import {
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionsParams,
+  GetUserByIdParams,
+  GetUserStatsParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
 import Question from "@/database/models/question.model";
 import Tag from "@/database/models/tag.model";
 import { FilterQuery } from "mongoose";
+import Answer from "@/database/models/answer.model";
 
 const getUserById = async (params: any) => {
   try {
@@ -164,6 +167,59 @@ const getSavedQuestions = async (params: GetSavedQuestionsParams) => {
   }
 };
 
+const getUserInfo = async (params: GetUserByIdParams) => {
+  try {
+    await connectToDatabase();
+
+    const { userId } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throw new Error("User Not Found");
+    }
+
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
+
+    return {
+      user,
+      totalQuestions,
+      totalAnswers,
+    };
+  } catch (err) {
+    console.log("error from getUserInfo : ", err);
+    throw err;
+  }
+};
+
+const getUserQuestins = async (params: GetUserStatsParams) => {
+  try {
+    await connectToDatabase();
+
+    const { userId } = params;
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+
+    const userQuestions = await Question.find({ author: userId })
+      .sort({
+        view: -1,
+        upvotes: -1,
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      })
+      .populate({ path: "tags", model: Tag, select: "_id name" });
+
+    return { totalQuestions, questions: userQuestions };
+  } catch (err) {
+    console.log("error from getUserQuestion : ", err);
+    throw err;
+  }
+};
+
 export {
   createUser,
   updateUser,
@@ -171,5 +227,7 @@ export {
   getAllUsers,
   getSavedQuestions,
   toggleSaveQuestion,
+  getUserInfo,
+  getUserQuestins,
 };
 export default getUserById;

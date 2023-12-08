@@ -43,7 +43,7 @@ body {
     );
   }
   .tab {
-    @apply min-h-full dark:bg-dark-400 bg-light-800 text-light-5;
+    @apply min-h-full dark:bg-dark-400  dark:text-light-500  aria-selected:text-primary-500 aria-selected:bg-primary-100 dark:aria-selected:bg-dark-300 dark:aria-selected:text-light-850;
   }
   .active-theme {
     filter: invert(53%) sepia(98%) saturate(3332%) hue-rotate(0deg)
