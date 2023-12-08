@@ -14,7 +14,7 @@ const AnswersTab = async ({
   searchParams,
 }: AnswersTabProps) => {
   const result = await getUserAsnwers({ userId });
-  console.log(result.answers[0].question);
+
   return (
     <>
       {result.answers.map((answer) => (

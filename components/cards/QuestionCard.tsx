@@ -3,9 +3,11 @@ import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { formatAndDividerNumber, getTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 type QuestionCardProps = {
-  _id: number;
+  _id: string;
   title: string;
   tags: { _id: number; name: string }[];
   author: { _id: number; name: string; picture: string };
@@ -27,6 +29,9 @@ const QuestionCard = ({
   answers,
   createdAt,
 }: QuestionCardProps) => {
+  
+  const showActionButton = clerkId && clerkId === author.clerkId;
+
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11 ">
       <div className="flex flex-col-reverse items-start justify-between gap-1 sm:flex-row">
@@ -38,7 +43,14 @@ const QuestionCard = ({
         <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
           {getTimestamp(createdAt)}
         </span>
+
+        <SignedIn>
+          {showActionButton && (
+            <EditDeleteAction type="Question" itemId={_id} />
+          )}
+        </SignedIn>
       </div>
+
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <RenderTag key={tag._id} name={tag.name} _id={tag._id} />

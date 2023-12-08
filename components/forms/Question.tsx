@@ -18,15 +18,23 @@ import { Input } from "@/components/ui/input";
 import { QuestionShema } from "@/lib/validatoins";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
 type QuestionProps = {
-  userId: string;
+  type?: string;
+  userId?: string;
+  mongoUserId: string;
+  questionDetails?: string | undefined;
 };
 
-const Question = ({ userId }: QuestionProps) => {
+const Question = ({
+  userId,
+  type,
+  mongoUserId,
+  questionDetails,
+}: QuestionProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const editorRef = useRef(null);
@@ -34,27 +42,42 @@ const Question = ({ userId }: QuestionProps) => {
   const pathname = usePathname();
   const { mode } = useTheme();
 
+  const parsedQuestionDetail = JSON.parse(questionDetails || "");
+  const groupedTags = parsedQuestionDetail.tags.map(
+    (tag: { _id: string; name: string }) => tag.name
+  );
+
   const form = useForm<z.infer<typeof QuestionShema>>({
     resolver: zodResolver(QuestionShema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetail.title || "",
+      explanation: parsedQuestionDetail.content || "",
+      tags: groupedTags,
     },
   });
 
   const handleSubmit = async (values: z.infer<typeof QuestionShema>) => {
     setIsSubmitting(true);
     try {
-      // make an async all to your API
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: userId,
-        path: pathname,
-      });
-      router.push("/");
+      if (type === "Edit") {
+        await editQuestion({
+          questionId: parsedQuestionDetail._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
+        router.push(`/question/${parsedQuestionDetail._id}`);
+      } else {
+        // make an async all to your API
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: userId!,
+          path: pathname,
+        });
+        router.push("/");
+      }
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -146,7 +169,7 @@ const Question = ({ userId }: QuestionProps) => {
                     // @ts-ignore
                     editorRef.current = editor;
                   }}
-                  initialValue={""}
+                  initialValue={parsedQuestionDetail.content || ""}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   init={{
@@ -206,8 +229,13 @@ const Question = ({ userId }: QuestionProps) => {
                 <>
                   <Input
                     placeholder="Add tags..."
+                    disabled={type === "Edit"}
                     className="paragraph-regular background-light900_dark300 light-border text-dark300_light700 min-h-[56px] border"
-                    onKeyDown={(e) => handleInputKeyDown(e, field)}
+                    onKeyDown={
+                      type === "Edit"
+                        ? (e) => handleInputKeyDown(e, field)
+                        : () => {}
+                    }
                   />
                   {field.value.length > 0 && (
                     <div className="flex-start mt-2.5 gap-2.5">
@@ -217,14 +245,16 @@ const Question = ({ userId }: QuestionProps) => {
                           className="subtle-medium text-light400_light500 background-light800_dark300 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                         >
                           {tag}
-                          <Image
-                            src={"assets/icons/close.svg"}
-                            alt="Close icon"
-                            width={12}
-                            height={12}
-                            onClick={() => handleRemoveTag(tag, field)}
-                            className="cursor-pointer object-contain invert-0 dark:invert"
-                          />{" "}
+                          {type !== "Edit" && (
+                            <Image
+                              src={"/assets/icons/close.svg"}
+                              alt="Close icon"
+                              width={12}
+                              height={12}
+                              onClick={() => handleRemoveTag(tag, field)}
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>
@@ -244,7 +274,11 @@ const Question = ({ userId }: QuestionProps) => {
           disabled={isSubmitting}
           type="submit"
         >
-          Submit
+          {isSubmitting ? (
+            <>{type === "Edit" ? "Editing..." : "Posting..."}</>
+          ) : (
+            <>{type === "Edit" ? "Edit Question" : "Ask a questino"}</>
+          )}
         </Button>
       </form>
     </Form>

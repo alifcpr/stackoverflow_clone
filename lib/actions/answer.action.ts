@@ -5,11 +5,13 @@ import { connectToDatabase } from "../mongoose";
 import {
   AnswerVoteParams,
   CreateAnswerParams,
+  DeleteAnswerParams,
   GetAnswersParams,
 } from "./shared.types";
 import Question from "@/database/models/question.model";
 import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
+import Interaction from "@/database/models/interaction.model";
 
 const createAnswer = async (params: CreateAnswerParams) => {
   try {
@@ -123,4 +125,30 @@ const downVoteAnswer = async (params: AnswerVoteParams) => {
   }
 };
 
-export { createAnswer, getAnswers, upVoteAnswer, downVoteAnswer };
+const deleteAnswer = async (params: DeleteAnswerParams) => {
+  try {
+    await connectToDatabase();
+    const { answerId, path } = params;
+
+    const answer = await Answer.findById(answerId);
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    await Answer.deleteOne({ _id: answerId });
+    await Question.updateMany(
+      { _id: answer.question },
+      { $pull: { answer: answerId } }
+    );
+
+    await Interaction.deleteMany({ answer: answerId });
+
+    revalidatePath(path);
+  } catch (err) {
+    console.log("error from DeleteQueston : ", err);
+    throw err;
+  }
+};
+
+export { createAnswer, getAnswers, upVoteAnswer, downVoteAnswer, deleteAnswer };
