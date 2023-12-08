@@ -47,7 +47,6 @@ const updateUser = async (params: UpdateUserParams) => {
     await connectToDatabase();
 
     const { clerkId, updateData, path } = params;
-    console.log("updateUser Run");
     const newUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
@@ -245,6 +244,8 @@ const getUserAsnwers = async (params: GetUserStatsParams) => {
     throw err;
   }
 };
+
+
 
 export {
   createUser,
