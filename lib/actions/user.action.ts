@@ -220,6 +220,32 @@ const getUserQuestins = async (params: GetUserStatsParams) => {
   }
 };
 
+const getUserAsnwers = async (params: GetUserStatsParams) => {
+  try {
+    await connectToDatabase();
+
+    const { userId } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+
+    const userAnswers = await Answer.find({ author: userId })
+      .sort({
+        upvotes: -1,
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      })
+      .populate({ path: "question", model: Question, select: "_id title" });
+
+    return { totalAnswers, answers: userAnswers };
+  } catch (err) {
+    console.log("error from getUserQuestion : ", err);
+    throw err;
+  }
+};
+
 export {
   createUser,
   updateUser,
@@ -229,5 +255,6 @@ export {
   toggleSaveQuestion,
   getUserInfo,
   getUserQuestins,
+  getUserAsnwers,
 };
 export default getUserById;
