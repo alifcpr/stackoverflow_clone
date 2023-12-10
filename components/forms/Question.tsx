@@ -25,7 +25,7 @@ import { useTheme } from "@/context/ThemeProvider";
 type QuestionProps = {
   type?: string;
   userId?: string;
-  mongoUserId: string;
+  mongoUserId?: string;
   questionDetails?: string | undefined;
 };
 
@@ -42,17 +42,18 @@ const Question = ({
   const pathname = usePathname();
   const { mode } = useTheme();
 
-  const parsedQuestionDetail = JSON.parse(questionDetails || "");
-  const groupedTags = parsedQuestionDetail.tags.map(
+  const parsedQuestionDetail =
+    questionDetails && JSON.parse(questionDetails || "");
+  const groupedTags = parsedQuestionDetail?.tags.map(
     (tag: { _id: string; name: string }) => tag.name
   );
 
   const form = useForm<z.infer<typeof QuestionShema>>({
     resolver: zodResolver(QuestionShema),
     defaultValues: {
-      title: parsedQuestionDetail.title || "",
-      explanation: parsedQuestionDetail.content || "",
-      tags: groupedTags,
+      title: parsedQuestionDetail?.title || "",
+      explanation: parsedQuestionDetail?.content || "",
+      tags: groupedTags || [],
     },
   });
 
@@ -169,7 +170,7 @@ const Question = ({
                     // @ts-ignore
                     editorRef.current = editor;
                   }}
-                  initialValue={parsedQuestionDetail.content || ""}
+                  initialValue={parsedQuestionDetail?.content || ""}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   init={{
@@ -233,11 +234,11 @@ const Question = ({
                     className="paragraph-regular background-light900_dark300 light-border text-dark300_light700 min-h-[56px] border"
                     onKeyDown={
                       type === "Edit"
-                        ? (e) => handleInputKeyDown(e, field)
-                        : () => {}
+                        ? () => {}
+                        : (e) => handleInputKeyDown(e, field)
                     }
                   />
-                  {field.value.length > 0 && (
+                  {field?.value?.length > 0 && (
                     <div className="flex-start mt-2.5 gap-2.5">
                       {field.value.map((tag: any) => (
                         <Badge

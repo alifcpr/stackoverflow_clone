@@ -5,9 +5,13 @@ import React from "react";
 import { getAllTags } from "@/lib/actions/tag.action";
 import NoResult from "@/components/shared/NoResult";
 import Link from "next/link";
+import { SearchParamsProps } from "@/types";
 
-const Tags = async () => {
-  const allTags = await getAllTags({});
+const Tags = async ({ searchParams }: SearchParamsProps) => {
+  
+  const allTags = await getAllTags({
+    searchQuery: searchParams.q,
+  });
 
   return (
     <div className="font-inter">

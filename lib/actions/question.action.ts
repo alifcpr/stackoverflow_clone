@@ -15,11 +15,23 @@ import {
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/models/answer.model";
 import Interaction from "@/database/models/interaction.model";
+import { FilterQuery } from "mongoose";
 
 const getQuestions = async (params: GetQuestionsParams) => {
   try {
     await connectToDatabase();
-    const questions = await Question.find({})
+
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const questions = await Question.find(query)
       .populate({
         path: "tags",
         model: Tag,
@@ -193,6 +205,38 @@ const editQuestion = async (params: EditQuestionParams) => {
   }
 };
 
+const getHotQuestions = async () => {
+  try {
+    await connectToDatabase();
+
+    const hotQuestions = await Question.find({})
+      .sort({ view: -1, uptoves: -1 })
+      .limit(5);
+
+    return hotQuestions;
+  } catch (err) {
+    console.log("error from getHotQuestions : ", err);
+    throw err;
+  }
+};
+
+const getTopPopularTags = async () => {
+  try {
+    await connectToDatabase();
+
+    const tags = Tag.aggregate([
+      { $project: { name: 1, numberOfquestions: { $size: "$questions" } } },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: 5 },
+    ]);
+
+    return tags;
+  } catch (err) {
+    console.log("error from getTopPopularTags", err);
+    throw err;
+  }
+};
+
 export {
   createQuestion,
   getQuestions,
@@ -201,4 +245,6 @@ export {
   downVoteQuestion,
   deleteQuestion,
   editQuestion,
+  getHotQuestions,
+  getTopPopularTags,
 };

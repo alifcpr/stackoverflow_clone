@@ -2,27 +2,15 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import RenderTag from "./RenderTag";
+import {
+  getHotQuestions,
+  getTopPopularTags,
+} from "@/lib/actions/question.action";
 
-const RightSidebar = () => {
-  const hotQuestions = [
-    { _id: 1, title: "How do I use express as a custom server in NextJS" },
-    { _id: 2, title: "Cascading Deletes in SQLAlchemy ?" },
-    { _id: 3, title: "How to Perfectly Center a Div with Tailwind CSS?" },
-    {
-      _id: 4,
-      title:
-        "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
-    },
-    { _id: 5, title: "Redux Toolkit Not Updating State as Expected" },
-  ];
-
-  const popularTags = [
-    { _id: 1, name: "javascript", totalQuestions: 5 },
-    { _id: 2, name: "react", totalQuestions: 15 },
-    { _id: 3, name: "next", totalQuestions: 2 },
-    { _id: 4, name: "vue", totalQuestions: 3 },
-    { _id: 5, name: "redux", totalQuestions: 10 },
-  ];
+const RightSidebar = async () => {
+  const hotQuestions = await getHotQuestions();
+  const popularTags = await getTopPopularTags();
+  console.log(popularTags);
 
   return (
     <section className="background-light900_dark200 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col overflow-y-auto border-r p-6 pt-36 font-inter shadow-light-300 dark:shadow-none max-xl:hidden">
@@ -32,7 +20,7 @@ const RightSidebar = () => {
           {hotQuestions.map((question) => (
             <Link
               key={question._id}
-              href={`/questions/${question._id}`}
+              href={`/question/${question._id}`}
               className="flex cursor-pointer items-center justify-between gap-7"
             >
               <p className="body-medium text-dark500_light700">
@@ -56,7 +44,7 @@ const RightSidebar = () => {
             <RenderTag
               key={tag._id}
               name={tag.name}
-              totalQuestions={tag.totalQuestions}
+              totalQuestions={tag.numberOfquestions}
               _id={tag._id}
               showCount
             />
