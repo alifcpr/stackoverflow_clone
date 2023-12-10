@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";
 import Votes from "./Votes";
+import Pagination from "./Pagination";
 
 type AllAnswersProps = {
   questionId: string;
@@ -25,6 +26,7 @@ const AllAnswers = async ({
   const result = await getAnswers({
     questionId: JSON.parse(questionId),
     sortBy: filter,
+    page,
   });
 
   return (
@@ -34,7 +36,7 @@ const AllAnswers = async ({
         <Filter filters={AnswerFilters} />
       </div>
       <div>
-        {result.map((answer: any) => (
+        {result.answers.map((answer: any) => (
           <article key={answer._id} className="light-border border-b py-10">
             <div className="flex items-center justify-between">
               <div className="mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -74,6 +76,9 @@ const AllAnswers = async ({
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+      <div className="mt-10 w-full">
+        <Pagination pageNumber={page || 1} isNext={result.isNext} />
       </div>
     </div>
   );

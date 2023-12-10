@@ -94,6 +94,7 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
         userId={JSON.stringify(mongoUser._id)}
         totalAnswers={result.answers.length}
         filter={searchParams?.filter}
+        page={searchParams.page ? +searchParams.page : 1}
       />
 
       <Answer
