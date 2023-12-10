@@ -7,16 +7,13 @@ import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
 import getUserById from "@/lib/actions/user.action";
 import { formatAndDividerNumber, getTimestamp } from "@/lib/utils";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-type QuestionDetailProps = {
-  params: { id: string };
-};
-
-const QuestionDetail = async ({ params: { id } }: QuestionDetailProps) => {
+const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
   const result = await getQuestionById({ questionId: id });
   const { userId: clerkId } = auth();
 
@@ -96,6 +93,7 @@ const QuestionDetail = async ({ params: { id } }: QuestionDetailProps) => {
         questionId={JSON.stringify(result._id)}
         userId={JSON.stringify(mongoUser._id)}
         totalAnswers={result.answers.length}
+        filter={searchParams?.filter}
       />
 
       <Answer

@@ -1,7 +1,7 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
-import { HomePageFilters } from "@/constants/filter";
+import { QuestionFilters } from "@/constants/filter";
 import Filter from "@/components/shared/Filter";
 import React from "react";
 import { auth } from "@clerk/nextjs";
@@ -16,8 +16,8 @@ const Collection = async ({ searchParams }: SearchParamsProps) => {
   const questions = await getSavedQuestions({
     clerkId: userId,
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
-
 
   return (
     <>
@@ -33,7 +33,7 @@ const Collection = async ({ searchParams }: SearchParamsProps) => {
           otherClasses="flex-1"
         />
         <Filter
-          filters={HomePageFilters}
+          filters={QuestionFilters}
           otherClasses={"min-h-[56px] sm:min-w-[170px]"}
         />
       </div>

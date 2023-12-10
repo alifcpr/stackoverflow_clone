@@ -14,7 +14,7 @@ type CustomInputProps = {
   otherClasses?: string;
 };
 
-const LocalSearchBar = ({
+const  LocalSearchBar = ({
   route,
   placeHolder,
   iconPosition,
@@ -28,6 +28,7 @@ const LocalSearchBar = ({
   const query = searchParams.get("q");
 
   const [search, setSearch] = useState(query || "");
+
 
   useEffect(() => {
     const debounceFn = setTimeout(() => {

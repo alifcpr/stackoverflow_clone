@@ -13,7 +13,7 @@ type AllAnswersProps = {
   userId: string;
   totalAnswers: number;
   page?: number;
-  filter?: number;
+  filter?: string;
 };
 const AllAnswers = async ({
   questionId,
@@ -22,7 +22,10 @@ const AllAnswers = async ({
   page,
   filter,
 }: AllAnswersProps) => {
-  const result = await getAnswers({ questionId: JSON.parse(questionId) });
+  const result = await getAnswers({
+    questionId: JSON.parse(questionId),
+    sortBy: filter,
+  });
 
   return (
     <div className="mt-11">
