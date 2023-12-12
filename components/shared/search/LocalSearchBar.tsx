@@ -21,6 +21,8 @@ const  LocalSearchBar = ({
   imgSrc,
   otherClasses,
 }: CustomInputProps) => {
+
+  
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -46,7 +48,7 @@ const  LocalSearchBar = ({
         });
         router.push(newUrl, { scroll: false });
       }
-    }, 500);
+    }, 300);
     return () => clearTimeout(debounceFn);
     
   }, [search, router, searchParams, pathName, route]);

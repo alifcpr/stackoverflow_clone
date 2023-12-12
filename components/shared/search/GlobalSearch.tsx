@@ -7,6 +7,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import GlobalResult from "../GlobalResult";
 
 const GlobalSearch = () => {
+  
   const searchParams = useSearchParams();
   const globalQuery = searchParams.get("global");
   const pathName = usePathname();
@@ -49,7 +50,7 @@ const GlobalSearch = () => {
         });
         router.push(newUrl, { scroll: false });
       }
-    }, 500);
+    }, 300);
     return () => clearTimeout(debounceFn);
   }, [value, router, searchParams, globalQuery]);
 

@@ -57,3 +57,16 @@ export interface RemoveKeyFromQueryParams {
   params: string;
   keys: string[];
 }
+
+export interface GlobalResultParams {
+  title: string;
+  id: string;
+  title: string;
+}
+
+export interface BadgeParam {
+  criteria: {
+    type: keyof typeof BADGE_CRITERIA;
+    count: number;
+  }[];
+}

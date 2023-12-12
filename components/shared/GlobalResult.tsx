@@ -5,16 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import GlobalFilters from "./search/GlobalFilters";
 import { globalSearch } from "@/lib/actions/general.actions";
+import { GlobalResultParams } from "@/types";
 
 const GlobalResult = () => {
   const searchParams = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState([
-    { type: "question", id: 1, title: "Next.Js" },
-    { type: "tag", id: 2, title: "HTML" },
-    { type: "user", id: 3, title: "alifcpr" },
-  ]);
+  const [result, setResult] = useState<GlobalResultParams[]>([]);
 
   const global = searchParams.get("global");
   const type = searchParams.get("type");

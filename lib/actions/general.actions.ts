@@ -29,6 +29,7 @@ const globalSearch = async (params: SearchParams) => {
     const typeLower = type?.toLowerCase();
 
     if (!typeLower || !SearchableTypes.includes(typeLower)) {
+      
       for (const { model, searchField, type } of modelsAndTypes) {
         const queryResult = await model
           .find({ [searchField]: regexQuery })
