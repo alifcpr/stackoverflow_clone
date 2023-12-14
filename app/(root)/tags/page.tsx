@@ -15,6 +15,7 @@ const Tags = async ({ searchParams }: SearchParamsProps) => {
     page: searchParams.page ? +searchParams.page : 1,
   });
 
+
   return (
     <div className="font-inter">
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>

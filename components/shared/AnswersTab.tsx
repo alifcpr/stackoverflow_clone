@@ -20,7 +20,7 @@ const AnswersTab = async ({
   });
 
   return (
-    <>
+    <div className="mt-4 flex flex-col gap-4">
       {result.answers.map((answer) => (
         <AnswerCard
           key={answer._id}
@@ -38,7 +38,7 @@ const AnswersTab = async ({
           isNext={result.isNext}
         />
       </div>
-    </>
+    </div>
   );
 };
 

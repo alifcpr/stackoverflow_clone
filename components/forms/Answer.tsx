@@ -27,6 +27,7 @@ type AnswerProps = {
 
 const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
   const pathName = usePathname();
 
@@ -41,7 +42,7 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
 
   const handlerCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     if (!authorId) {
-      return ;
+      return;
     }
     setIsSubmitting(true);
     try {
@@ -65,13 +66,37 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
     }
   };
 
+  const generateAIAnswer = async () => {
+    if (!authorId) return;
+    setIsSubmittingAI(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+        }
+      );
+
+      const aiAnswer = await response.json();
+      alert(aiAnswer.reply);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsSubmittingAI(false);
+    }
+  };
+
   return (
     <div className="mt-8">
       <div className="flex flex-col items-center justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
-        <Button className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500">
+        <Button
+          onClick={generateAIAnswer}
+          className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+        >
           <Image
             src={"/assets/icons/stars.svg"}
             alt="star"

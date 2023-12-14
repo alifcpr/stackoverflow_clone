@@ -37,6 +37,10 @@ const config: Config = {
           500: "#7B8EC8",
           400: "#858EAD",
         },
+        muted: {
+          900: "#292929",
+          100: "#e9e5e5",
+        },
         "accent-blue": "#1DA1F2",
       },
       fontFamily: {
