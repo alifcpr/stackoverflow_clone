@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "@/components/shared/navbar/NavBar";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import RightSidebar from "@/components/shared/RightSidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
         </section>
         <RightSidebar />
       </div>
+      <Toaster />
     </main>
   );
 };

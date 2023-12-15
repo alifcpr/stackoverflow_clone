@@ -29,7 +29,7 @@ const QuestionCard = ({
   answers,
   createdAt,
 }: QuestionCardProps) => {
-  
+
   const showActionButton = clerkId && clerkId === author.clerkId;
 
   return (
@@ -46,7 +46,7 @@ const QuestionCard = ({
 
         <SignedIn>
           {showActionButton && (
-            <EditDeleteAction type="Question" itemId={_id} />
+            <EditDeleteAction type="Question" itemId={JSON.parse(JSON.stringify(_id))} />
           )}
         </SignedIn>
       </div>

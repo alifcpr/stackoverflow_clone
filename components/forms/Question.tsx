@@ -21,6 +21,7 @@ import Image from "next/image";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
+import { toast } from "../ui/use-toast";
 
 type QuestionProps = {
   type?: string;
@@ -67,6 +68,9 @@ const Question = ({
           content: values.explanation,
           path: pathname,
         });
+        toast({
+          title: "Your question has been edited successfully",
+        });
         router.push(`/question/${parsedQuestionDetail._id}`);
       } else {
         // make an async all to your API
@@ -76,6 +80,9 @@ const Question = ({
           tags: values.tags,
           author: userId!,
           path: pathname,
+        });
+        toast({
+          title: "Your question has been created successfully",
         });
         router.push("/");
       }

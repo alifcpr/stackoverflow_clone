@@ -21,17 +21,23 @@ const AnswersTab = async ({
 
   return (
     <div className="mt-4 flex flex-col gap-4">
-      {result.answers.map((answer) => (
-        <AnswerCard
-          key={answer._id}
-          clerkId={clerkId}
-          _id={answer._id}
-          question={answer.question}
-          author={answer.author}
-          upvotes={answer.upvotes}
-          createdAt={answer.createdAt}
-        />
-      ))}
+      {result.answers.length > 0 ? (
+        result.answers.map((answer) => (
+          <AnswerCard
+            key={answer._id}
+            clerkId={clerkId}
+            _id={answer._id}
+            question={answer.question}
+            author={answer.author}
+            upvotes={answer.upvotes}
+            createdAt={answer.createdAt}
+          />
+        ))
+      ) : (
+        <h1 className="text-dark100_light900">
+          Has not answered any questions yet
+        </h1>
+      )}
       <div className="mt-10">
         <Pagination
           pageNumber={searchParams.page ? +searchParams.page : 1}

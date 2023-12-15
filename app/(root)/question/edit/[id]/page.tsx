@@ -17,7 +17,7 @@ const QuestionEdit = async ({ params: { id } }: ParamsProps) => {
       <h1 className="h1-bold text-dark100_light900">Edit Question</h1>
       <div className="mt-9">
         <Question
-          mongoUserId={mongoUser._id}
+          mongoUserId={JSON.parse(JSON.stringify(mongoUser._id))}
           type="Edit"
           questionDetails={JSON.stringify(result)}
         />

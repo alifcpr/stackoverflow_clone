@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 type AnswerProps = {
   question: string;
@@ -27,7 +28,6 @@ type AnswerProps = {
 
 const Answer = ({ question, questionId, authorId }: AnswerProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
   const pathName = usePathname();
 
@@ -42,7 +42,10 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
 
   const handlerCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     if (!authorId) {
-      return;
+      return toast({
+        title: "Please Log In",
+        description: "You must be logged in to perform this action",
+      });
     }
     setIsSubmitting(true);
     try {
@@ -59,33 +62,20 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
         const editor = editorRef.current as any;
         editor.setContent("");
       }
+      toast({
+        title: "Your answer has been shared",
+      });
     } catch (err) {
       console.log("error from handlerCreateAnswer", err);
+      toast({
+        title: "Your response was not shared, try again",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const generateAIAnswer = async () => {
-    if (!authorId) return;
-    setIsSubmittingAI(true);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
-        {
-          method: "POST",
-          body: JSON.stringify({ question }),
-        }
-      );
-
-      const aiAnswer = await response.json();
-      alert(aiAnswer.reply);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsSubmittingAI(false);
-    }
-  };
+ 
 
   return (
     <div className="mt-8">
@@ -94,7 +84,6 @@ const Answer = ({ question, questionId, authorId }: AnswerProps) => {
           Write your answer here
         </h4>
         <Button
-          onClick={generateAIAnswer}
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
         >
           <Image

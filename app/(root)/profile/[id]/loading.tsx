@@ -30,7 +30,6 @@ const Loading = () => {
       </div>
       {/* answers and questions */}
       <Skeleton className="mt-10 h-10 w-32" />
-
       <div className="mt-4 flex flex-col gap-y-7">
         {[1, 2].map((item) => (
           <Skeleton key={item} className="h-36 w-full" />

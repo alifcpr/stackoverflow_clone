@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
+import { toast } from "../ui/use-toast";
 
 type ProfileProps = {
   clerkId: string;
@@ -52,7 +53,10 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           location: values.location,
           portfolioWebsite: values.portfolioWebsite,
         },
-        path: pathName
+        path: pathName,
+      });
+      toast({
+        title: "Your profile has been successfully edited",
       });
       router.back();
     } catch (err) {

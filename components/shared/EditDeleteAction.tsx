@@ -4,6 +4,7 @@ import { deleteQuestion } from "@/lib/actions/question.action";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "../ui/use-toast";
 
 type EditDeleteActionProps = {
   type: string;
@@ -20,11 +21,16 @@ const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
   const handleDelete = async () => {
     if (type === "Question") {
       await deleteQuestion({ questionId: itemId, path: pathName });
+      toast({
+        title: "Your question has been successfully deleted",
+      });
     } else if (type === "Answer") {
-      // delte answer
       await deleteAnswer({
         answerId: itemId,
         path: pathName,
+      });
+      toast({
+        title: "Your reply has been successfully deleted",
       });
     }
   };
