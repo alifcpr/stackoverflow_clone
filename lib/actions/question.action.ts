@@ -11,6 +11,7 @@ import {
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
+  RecommendedParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/models/answer.model";
@@ -292,6 +293,72 @@ const getTopPopularTags = async () => {
   }
 };
 
+const getRecommendedQuestions = async (params: RecommendedParams) => {
+  try {
+    await connectToDatabase();
+
+    const { userId, page = 1, pageSize = 20, searchQuery } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throw new Error("user not found");
+    }
+
+    const skipAmount = (page - 1) * pageSize;
+
+    const userInterActions = await Interaction.find({ user: user._id })
+      .populate("tags")
+      .exec();
+
+    const usersTags = userInterActions.reduce((tags, interaction) => {
+      if (interaction.tags) {
+        tags = tags.concat(interaction.tags);
+      }
+      return tags;
+    }, []);
+
+    const distinctUserTagIds = [
+      ...new Set(usersTags.map((tag: any) => tag._id)),
+    ];
+
+    const query: FilterQuery<typeof Question> = {
+      $and: [
+        { tags: { $in: distinctUserTagIds } },
+        { author: { $ne: user._id } },
+      ],
+    };
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: searchQuery, $options: "i" } },
+        { content: { $regex: searchQuery, $options: "i" } },
+      ];
+    }
+
+    const totalQuestions = await Question.countDocuments(query);
+
+    const recommendedQuestions = await Question.find(query)
+      .populate({
+        path: "tags",
+        model: Tag,
+      })
+      .populate({
+        path: "author",
+        model: User,
+      })
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    const isNext = totalQuestions > skipAmount + recommendedQuestions.length;
+
+    return { questions: recommendedQuestions, isNext };
+  } catch (err) {
+    console.log("Erorr from getRecommendedQuestions : ", err);
+    throw err;
+  }
+};
+
 export {
   createQuestion,
   getQuestions,
@@ -302,4 +369,5 @@ export {
   editQuestion,
   getHotQuestions,
   getTopPopularTags,
+  getRecommendedQuestions,
 };
