@@ -12,6 +12,7 @@ import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import type { Metadata } from "next";
 
 const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
   const result = await getQuestionById({ questionId: id });
@@ -107,3 +108,19 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
 };
 
 export default QuestionDetail;
+
+type metaInput = {
+  params: { id: string };
+};
+
+export const generateMetadata = async ({
+  params: { id },
+}: metaInput): Promise<Metadata> => {
+  const data = await getQuestionById({ questionId: id });
+
+  return {
+    title: data.title,
+    description: data.content,
+    authors: data.author.name,
+  };
+};

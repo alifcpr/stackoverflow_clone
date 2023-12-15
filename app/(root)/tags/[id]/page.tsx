@@ -7,6 +7,7 @@ import { HomePageFilters } from "@/constants/filter";
 import { getQuestionByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 import React from "react";
+import type { Metadata } from "next";
 
 const TagDetail = async ({ params: { id }, searchParams }: URLProps) => {
   const result = await getQuestionByTagId({
@@ -71,3 +72,20 @@ const TagDetail = async ({ params: { id }, searchParams }: URLProps) => {
 };
 
 export default TagDetail;
+
+type metaInput = {
+  params: { id: string };
+};
+
+export const generateMetadata = async ({
+  params: { id },
+}: metaInput): Promise<Metadata> => {
+  const data = await getQuestionByTagId({
+    tagId: id,
+  });
+
+  return {
+    title: data.tagTitle,
+    description: `${data.tagTitle} questions page`,
+  };
+};

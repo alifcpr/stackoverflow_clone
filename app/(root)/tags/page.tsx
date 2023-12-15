@@ -7,6 +7,11 @@ import NoResult from "@/components/shared/NoResult";
 import Link from "next/link";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags | DevOverflow",
+};
 
 const Tags = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllTags({
@@ -14,7 +19,6 @@ const Tags = async ({ searchParams }: SearchParamsProps) => {
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
   });
-
 
   return (
     <div className="font-inter">

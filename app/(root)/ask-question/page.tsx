@@ -1,15 +1,19 @@
 import Question from "@/components/forms/Question";
 import getUserById from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Ask Question | DevOverflow",
+};
 
 const AskQuestion = async () => {
   const { userId } = auth();
   if (!userId) redirect("/sign-up");
 
   const userInfo = await getUserById({ userId });
-  console.log(userInfo);
 
   return (
     <div>
