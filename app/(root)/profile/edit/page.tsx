@@ -4,6 +4,7 @@ import { ParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import React from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Edit Profile | DevOverflow",
@@ -11,10 +12,9 @@ export const metadata: Metadata = {
 
 const EditProfile = async ({ params: { id } }: ParamsProps) => {
   const { userId } = auth();
-  if (!userId) return null;
+  if (!userId) redirect("/");
 
   const mongoUser = await getUserById({ userId });
-  console.log("MongoUser : ", mongoUser);
 
   return (
     <>

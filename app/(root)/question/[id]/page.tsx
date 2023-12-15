@@ -21,6 +21,8 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
   let mongoUser;
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
+  } else {
+    mongoUser = null;
   }
 
   return (
@@ -46,12 +48,26 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
             <Votes
               type="Question"
               itemId={JSON.stringify(result._id)}
-              userId={JSON.parse(JSON.stringify(mongoUser._id))}
+              userId={
+                mongoUser !== null
+                  ? JSON.parse(JSON.stringify(mongoUser._id))
+                  : null
+              }
               upVotes={result.upvotes.length}
-              hasUpVoted={result.upvotes.includes(mongoUser._id)}
+              hasUpVoted={
+                mongoUser !== null
+                  ? result.upvotes.includes(mongoUser._id)
+                  : null
+              }
               downVotes={result.downvotes.length}
-              hasDownVoted={result.downvotes.includes(mongoUser.id)}
-              hasSaved={mongoUser.saved.includes(result._id)}
+              hasDownVoted={
+                mongoUser !== null
+                  ? result.downvotes.includes(mongoUser.id)
+                  : null
+              }
+              hasSaved={
+                mongoUser !== null ? mongoUser.saved.includes(result._id) : null
+              }
             />
           </div>
         </div>
@@ -92,7 +108,7 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
 
       <AllAnswers
         questionId={JSON.stringify(result._id)}
-        userId={JSON.stringify(mongoUser._id)}
+        userId={mongoUser !== null ? JSON.stringify(mongoUser._id) : null}
         totalAnswers={result.answers.length}
         filter={searchParams?.filter}
         page={searchParams.page ? +searchParams.page : 1}
@@ -101,7 +117,7 @@ const QuestionDetail = async ({ params: { id }, searchParams }: URLProps) => {
       <Answer
         question={result.content}
         questionId={JSON.stringify(result._id)}
-        authorId={JSON.stringify(mongoUser._id)}
+        authorId={mongoUser !== null ? JSON.stringify(mongoUser._id) : null}
       />
     </>
   );

@@ -11,7 +11,7 @@ import Pagination from "./Pagination";
 
 type AllAnswersProps = {
   questionId: string;
-  userId: string;
+  userId: string | null;
   totalAnswers: number;
   page?: number;
   filter?: string;
@@ -65,11 +65,17 @@ const AllAnswers = async ({
                 <Votes
                   type="Answer"
                   itemId={JSON.stringify(answer._id)}
-                  userId={JSON.parse(userId)}
+                  userId={userId ? JSON.parse(userId) : null}
                   upVotes={answer.upvotes.length}
-                  hasUpVoted={answer.upvotes.includes(JSON.parse(userId))}
+                  hasUpVoted={
+                    userId ? answer.upvotes.includes(JSON.parse(userId)) : null
+                  }
                   downVotes={answer.downvotes.length}
-                  hasDownVoted={answer.downvotes.includes(JSON.parse(userId))}
+                  hasDownVoted={
+                    userId
+                      ? answer.downvotes.includes(JSON.parse(userId))
+                      : null
+                  }
                 />
               </div>
             </div>
