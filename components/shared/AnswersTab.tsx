@@ -22,7 +22,7 @@ const AnswersTab = async ({
   return (
     <div className="mt-4 flex flex-col gap-4">
       {result.answers.length > 0 ? (
-        result.answers.map((answer) => (
+        result.answers.map((answer: any) => (
           <AnswerCard
             key={answer._id}
             clerkId={clerkId}

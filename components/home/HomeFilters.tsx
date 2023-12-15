@@ -33,7 +33,7 @@ const HomeFilters = () => {
 
   return (
     <div className="mt-10  flex-wrap gap-3 font-inter max-md:hidden md:flex">
-      {HomePageFilters.map((filter, index) => (
+      {HomePageFilters.map((filter: any, index: number) => (
         <Button
           key={index}
           onClick={() => handleTypeClick(filter.value)}

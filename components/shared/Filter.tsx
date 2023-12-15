@@ -44,7 +44,7 @@ const Filter = ({ filters, otherClasses, containerClasses }: FilterProps) => {
           </div>
         </SelectTrigger>
         <SelectContent>
-          {filters.map((filter, index) => (
+          {filters.map((filter: any, index: number) => (
             <SelectItem key={index} value={filter.value}>
               {filter.name}
             </SelectItem>

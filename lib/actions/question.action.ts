@@ -311,15 +311,16 @@ const getRecommendedQuestions = async (params: RecommendedParams) => {
       .populate("tags")
       .exec();
 
-    const usersTags = userInterActions.reduce((tags, interaction) => {
+    const usersTags = userInterActions.reduce((tags: any, interaction: any) => {
       if (interaction.tags) {
         tags = tags.concat(interaction.tags);
       }
       return tags;
     }, []);
 
-    const distinctUserTagIds = [
-      ...new Set(usersTags.map((tag: any) => tag._id)),
+    const distinctUserTagIds: any = [
+      // @ts-ignore
+      ...new Set(usersTags.map((tag: { _id: any }) => tag._id)),
     ];
 
     const query: FilterQuery<typeof Question> = {

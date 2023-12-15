@@ -18,7 +18,7 @@ const NavContent = () => {
   const pathName = usePathname();
   return (
     <section className="flex h-full w-full flex-col gap-6 pt-16 font-inter">
-      {sidebarLinks.map((item, index) => {
+      {sidebarLinks.map((item: any, index: number) => {
         const isActive = pathName === item.route;
         return (
           <SheetClose key={index}>

@@ -11,7 +11,7 @@ const Loading = () => {
       </div>
 
       <div className="my-6  gap-3 max-md:hidden md:flex">
-        {[1, 2, 3, 4].map((item) => (
+        {[1, 2, 3, 4].map((item: number) => (
           <Skeleton key={item} className="h-12 w-28" />
         ))}
       </div>

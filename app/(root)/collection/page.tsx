@@ -46,8 +46,8 @@ const Collection = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions!.savedQuestion.length > 0 ? (
-          questions!.savedQuestion.map((question: any) => (
+        {questions.savedQuestion.length > 0 ? (
+          questions.savedQuestion.map((question: any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}

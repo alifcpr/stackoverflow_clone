@@ -23,7 +23,7 @@ const Loading = () => {
       <div className="mt-10">
         <h3 className="h3-bold text-dark100_light900">Stats</h3>
         <div className="mt-3 flex gap-x-5">
-          {[1, 2, 3, 4].map((item) => (
+          {[1, 2, 3, 4].map((item: number) => (
             <Skeleton key={item} className="h-28 flex-1" />
           ))}
         </div>
@@ -31,7 +31,7 @@ const Loading = () => {
       {/* answers and questions */}
       <Skeleton className="mt-10 h-10 w-32" />
       <div className="mt-4 flex flex-col gap-y-7">
-        {[1, 2].map((item) => (
+        {[1, 2].map((item: number) => (
           <Skeleton key={item} className="h-36 w-full" />
         ))}
       </div>
