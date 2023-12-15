@@ -20,7 +20,7 @@ import Answer from "@/database/models/answer.model";
 import { BadgeCriteriaType } from "@/types";
 import { assignBadges } from "../utils";
 
-const getUserById = async (params: any) => {
+const getUserById = async (params: GetUserByIdParams) => {
   try {
     await connectToDatabase();
     const { userId } = params;

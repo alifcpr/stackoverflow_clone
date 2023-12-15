@@ -58,15 +58,6 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    console.log(`
-        clerkId : ${id} ||
-        email_addresses : ${email_addresses} ||
-        image_url : ${image_url} ||
-        username : ${username} ||
-        first_name : ${first_name} ||
-        last_name : ${last_name} ||
-    `);
-
     const createdUser = await createUser({
       clerkId: id,
       name: `${first_name}${last_name ? `${last_name}` : ""}`,

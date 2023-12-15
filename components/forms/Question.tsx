@@ -98,7 +98,6 @@ const Question = ({
   ) => {
     if (e.key === "Enter" && field.name === "tags") {
       e.preventDefault();
-      console.log(field);
       const tagInput = e.target as HTMLInputElement;
       const tagValue = tagInput.value.trim();
 

@@ -36,7 +36,7 @@ const ParseHTML = ({ data }: ParseHTMLProps) => {
     Prsim.highlightAll();
   }, []);
 
-  return <div className="text-dark-100 dark:text-light-900">{parse(data)}</div>;
+  return <div className={`markdown w-full min-w-full`}>{parse(data)}</div>;
 };
 
 export default ParseHTML;

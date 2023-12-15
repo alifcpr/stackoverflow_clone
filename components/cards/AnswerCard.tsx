@@ -8,7 +8,7 @@ import EditDeleteAction from "../shared/EditDeleteAction";
 type AnswerCardProps = {
   _id: string;
   question: { _id: string; title: string };
-  author: { _id: number; name: string; picture: string };
+  author: { _id: number; name: string; picture: string; clerkId: string };
   createdAt: Date;
   upvotes: string[];
   clerkId?: string | null;

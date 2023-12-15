@@ -13,7 +13,8 @@ const EditProfile = async ({ params: { id } }: ParamsProps) => {
   const { userId } = auth();
   if (!userId) return null;
 
-  const mongoUser = await getUserById(userId);
+  const mongoUser = await getUserById({ userId });
+  console.log("MongoUser : ", mongoUser);
 
   return (
     <>

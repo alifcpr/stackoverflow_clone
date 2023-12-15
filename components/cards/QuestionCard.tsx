@@ -10,7 +10,7 @@ type QuestionCardProps = {
   _id: string;
   title: string;
   tags: { _id: number; name: string }[];
-  author: { _id: number; name: string; picture: string };
+  author: { _id: number; name: string; picture: string; clerkId: string };
   views: number;
   answers: Array<object>;
   createdAt: Date;
@@ -29,7 +29,7 @@ const QuestionCard = ({
   answers,
   createdAt,
 }: QuestionCardProps) => {
-
+  
   const showActionButton = clerkId && clerkId === author.clerkId;
 
   return (
@@ -46,7 +46,10 @@ const QuestionCard = ({
 
         <SignedIn>
           {showActionButton && (
-            <EditDeleteAction type="Question" itemId={JSON.parse(JSON.stringify(_id))} />
+            <EditDeleteAction
+              type="Question"
+              itemId={JSON.parse(JSON.stringify(_id))}
+            />
           )}
         </SignedIn>
       </div>
