@@ -11,6 +11,7 @@
  - save questions
  - Advanced search system
  - full responsive
+ - pagination
 
 
 <h2>Project technologies</h2>
@@ -33,7 +34,7 @@
 
 ![Screenshot 2024-07-27 204829](https://github.com/user-attachments/assets/280668dd-6abc-4f62-b37c-78231bd5693c)
 
-
+![Screenshot 2024-07-27 205400](https://github.com/user-attachments/assets/528cf0ce-6575-4fdb-98fb-6d08c1735072)
 
 
 
